@@ -33,7 +33,8 @@ def call_create(url, card_id, member_name):
     """
     post_data = {
         'apikey': API_KEY,
-        'create': card_id + ";" + member_name
+        'action': 'create',
+        'usr': card_id + ";" + member_name
     }
     return requests.post(url, data=post_data, headers=HEADER)
 
@@ -43,17 +44,29 @@ def call_getall(url):
     Calls the API to get all members currently listed in the database.
     :param url:
     :return: A list of all members in the format
-    [ (uid_i, name_i), (uid_i+1, name_i+1), (uid_n, name_n)]
+    [ [uid_i, name_i], [uid_i+1, name_i+1], [uid_n, name_n]]
     """
+    post_data = {
+        'apikey': API_KEY,
+        'action': 'getall'
+    }
+    return requests.post(url, data=post_data, headers=HEADER)
 
 
-def call_remove(url, uid):
+def call_remove(url, uid, member_name):
     """
     Removes a member from the database using the UID of the card.
     :param url:
     :param uid:
+    :param member_name:
     :return:
     """
+    post_data = {
+        'apikey': API_KEY,
+        'action': 'delete',
+        'usr': uid + ';' + member_name
+    }
+    return requests.post(url, data=post_data, headers=HEADER)
 
 
 def add_member():
@@ -65,35 +78,85 @@ def add_member():
 
     print("=> Nutzer hinzufügen")
     # get full name of member
-    name = input("Bitte vollständigen Namen eingeben:")
+    name = input("Bitte vollständigen Namen eingeben:\n")
 
     # read decimal ID
-    id_dec = int(input("Bitte Studentenausweis auflegen"))
+    id_dec = int(input("Bitte Studentenausweis auflegen\n"))
     hex_reversed_truncated = reverse_octet(hex(id_dec))[:-2].lower()
 
-    print("\nFolgende Daten werden gesendet:\n" + hex_reversed_truncated + '\n' + name)
+    # Check if the member is already present in database
+    list_allmembers = get_all_members()
 
-    print("Sende...")
-    res = call_create(API_URL, hex_reversed_truncated, name)
-    if "Created" in res.text:
-        print("Eintrag erfolgreich angelegt!\n")
+    if hex_reversed_truncated not in list_allmembers:
+        print("\nFolgende Daten werden gesendet:\n" + hex_reversed_truncated + '\n' + name)
+
+        print("Sende...")
+        res = call_create(API_URL, hex_reversed_truncated, name)
+        if "Created" in res.text:
+            print("Eintrag erfolgreich angelegt!\n")
+        else:
+            print("Fehler beim Anlegen: ", res.text, '\n')
     else:
-        print("Fehler beim Anlegen: ", res.text, '\n')
+        print("Eintrag ist bereits vorhanden!")
 
 
 def remove_member():
-
     """
     Removes a member from the database. This is done by first fetching all members from the database
     and then selecting the member to be removed.
     :return:
     """
+    list_allmembers = get_all_members()
+    list_allmembers = list_allmembers[1:-1]  # truncate empty line at end of file and first line
+    length = len(list_allmembers)
+
+    for i in range(length):
+        # i[0]: UID of member
+        # i[1]: Name of member
+        print(str(i) + ') ' + str(list_allmembers[i][1]))
+
+    print("=> Nutzer löschen")
+    member = int(input("Bitte Zahl eingeben, die gelöscht werden soll\n"))
+    member_uid = list_allmembers[member][0]
+    member_name = list_allmembers[member][1]
+    print("GELÖSCHT wird folgender Eintrag:")
+    print("Name: " + member_name + "\n" + "UID: " + member_uid)
+    input("Enter zum Bestätigen, Strg-C für Abbruch.\n")
+
+    res = call_remove(API_URL, member_uid, member_name)
+    if "Deleted" in res.text:
+        print("Eintrag erfolgreich gelöscht!\n")
+    else:
+        print("Fehler beim Löschen: ", res.text, '\n')
+
+
+def get_all_members():
+    """"
+    Returns a list of all UIDs present in the dataset.
+    This is done by calling the API for a list of all items and then 
+    piping them into a list.
+    """
+    res = call_getall(API_URL)
+    response = res.text
+    all_members = response.split('\n')
+    all_members = [i.split(';') for i in all_members]
+
+    return all_members
+
 
 if __name__ == '__main__':
-    print("""
-    ===========================
-    == Schlüsselkastensystem ==
-    ===========================
-    """)
     while True:
-        add_member()
+        print("""
+        ===========================
+        == Schlüsselkastensystem ==
+        ===========================
+        """)
+        print("""
+            1) Mitglied(er) hinzufügen
+            2) Mitglied löschen
+        """)
+        choice = int(input("Bitte wählen."))
+        if choice == 1:
+            add_member()
+        if choice == 2:
+            remove_member()
