@@ -9,6 +9,7 @@ Basierend auf:
 - ULN2003APG Steppercontroller
 
 # Done
+## NodeMCU-esp8266
 - Wifi-Anbindung
 - HTTPS-GET der erlaubten Studierendenausweise über API mit Überprüfung des SSL-Zertifikats
 - Auslesen der Studierendenausweise über RFID-RC522
@@ -17,8 +18,9 @@ Basierend auf:
 - 4 Digit (7 Segment)-Display für Status-Codes
 - Fallbacks
 
+## Server / Client
 - API (PHP)
-- API Dokumentation (siehe [API/README.md](api/README.md)
+- API Dokumentation (siehe [API/README.md](api/README.md))
 - Client zum Hinzufügen / Löschen von Nutzern (Python3)
 
 # Todo
