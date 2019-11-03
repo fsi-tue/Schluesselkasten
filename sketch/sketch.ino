@@ -71,21 +71,20 @@ void setup() {
   rfid.PCD_Init(); // Init MFRC522
 
 //Print license
-  Serial.println("
---------------------------------------------------------------------------------------------------
-  Schluesselkasten for the Computer-Science Student Union of the Univertity of Tuebingen
-  Copyright (C) 2019  Jules Kreuer / not-a-feature
-  
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-  
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-  See https://github.com/not-a-feature/Schluesselkasten/blob/master/LICENSE for more. details.
---------------------------------------------------------------------------------------------------");
+Serial.println("--------------------------------------------------------------------------------------------------");
+  Serial.println("Schluesselkasten for the Computer-Science Student Union of the Univertity of Tuebingen");
+  Serial.println("Copyright (C) 2019  Jules Kreuer / not-a-feature");
+  Serial.println();
+  Serial.println("This program is free software: you can redistribute it and/or modify");
+  Serial.println("it under the terms of the GNU General Public License as published by");
+  Serial.println("the Free Software Foundation, either version 3 of the License, or");
+  Serial.println("(at your option) any later version.");
+  Serial.println();
+  Serial.println("This program is distributed in the hope that it will be useful,");
+  Serial.println("but WITHOUT ANY WARRANTY; without even the implied warranty of");
+  Serial.println("MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.");
+  Serial.println("See https://github.com/not-a-feature/Schluesselkasten/blob/master/LICENSE for more. details.");
+Serial.println("--------------------------------------------------------------------------------------------------");
 
   
   //LED-Display
