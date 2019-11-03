@@ -10,14 +10,16 @@ Basierend auf:
 
 # Done
 - Wifi-Anbindung
-- API
-- HTTPS-GET der erlaubten Studierendenausweise über API mit Überprüfung des
-  SSL-Zertifikats
+- HTTPS-GET der erlaubten Studierendenausweise über API mit Überprüfung des SSL-Zertifikats
 - Auslesen der Studierendenausweise über RFID-RC522
 - Erkennung Tür offen/geschlossen
 - Steppersteuerung
 - 4 Digit (7 Segment)-Display für Status-Codes
 - Fallbacks
+
+- API (PHP)
+- API Dokumentation (siehe [API/README.md](api/README.md)
+- Client zum Hinzufügen / Löschen von Nutzern (Python3)
 
 # Todo
 - ~~USV (UPS) Interne Powerbank~~ (aufgegeben auf Grund von Platzmangel)
@@ -27,18 +29,29 @@ Basierend auf:
 
 # Setup
 ## Server
-- api.php in public_html Ordner kopieren
-- user.csv eine Ebene höher erstellen
-- UIDs im Format: UID(lowercase);Name eintragen
+- api.php & api_constants.php in public_html Ordner kopieren
+- user.csv erstellen
+- in api_constants.php Pfad und Apikey anpassen.
+- ggf.: Nutzer manuell hinzufügen
+  ```
+  12bb4f00;MaxMuster
+  bb420975;ErikaMuster
+  89e370ae;JaneDoe
+  ```
 
-Bsp.:<br>
-12bb4f00;MaxMuster<br>
-bb420975;ErikaMuster<br>
-89e370ae;JaneDoe
+## Client
+ - api_constants.py im Ordner client erstellen:
 
+format for the api_constants.py file:
+API_URL = <api-url-here>
+API_KEY = <api-key-here>
+HEADER = {"Content-type": "application/x-www-form-urlencoded",
+          "Accept": "text/plain"}
+
+  - Skript starten und Nutzer hinzufügen
 
 ## NodeMCU
-- ChangeMe Daten im sketch.ino anpassen und hochladen
+- ChangeMe Daten in sketch.ino anpassen und hochladen
 - Hardware zusammenlöten, Verbauen, Fertig
 
 ## Verkabelung
@@ -72,6 +85,7 @@ Der Schlüsselkasten zeigt permanent einen Status-Code an. Diese haben folgende 
   - 4001 Died while connecting with Wifi
   - 4002 Died while fetching
   - (4003  Died in Main Loop)
+- 5XXX Reboot
 
 # License
 ```
