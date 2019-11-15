@@ -71,6 +71,7 @@ Der Schlüsselkasten zeigt permanent einen Status-Code an. Diese haben folgende 
       - 1250 Header Erhalten
       - 1260 UIDs auslesen
 - 2XXX Activ
+  - 2000 Bootup fertig, warte auf erste Aktion
   - 2001 Auf Karte wartend
   - 2002 Karte gelesen
   - 2003 Warten bis Kasten geschlossen
@@ -79,13 +80,17 @@ Der Schlüsselkasten zeigt permanent einen Status-Code an. Diese haben folgende 
   - 3002 Karte nicht erlaubt
   - 3003 Öffnen des Schlosses
   - 3004 Schließen des Schlosses
-  - 3005 Debug 30 Steps
 - 4XXX Error
   - (4000 Died in boot)
   - 4001 Died while connecting with Wifi
   - 4002 Died while fetching
   - (4003  Died in Main Loop)
 - 5XXX Reboot
+- Text
+  - Ok Alles ok, warte auf Karte
+  - OPEN Schlüsselkasten kann geöffnet werden
+  - D-R Debug Rechts (30 Schritte nach rechts)
+  - D-L Debug Links (30 Schritte nach links)
 
 # License
 ```
