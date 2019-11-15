@@ -1,6 +1,6 @@
 #include <SPI.h>       //SPI 
 #include <MFRC522.h>   //RFID Reader
-#include <TM1637.h>    // 7-Segment Display
+#include "SevenSegmentTM1637.h"    // 7-Segment Display https://github.com/bremme/arduino-tm1637
 #include <WiFiClientSecure.h> //SSL-Connection
 #include <WiFiClient.h>       //Wifi-Connection
 #include <ESP8266WebServer.h>
@@ -26,7 +26,7 @@ const int maxSteps = 130; //Steps to make a quarter turn
 //4-Digit LED Display
 const int LED_CLK = 16; //Set the CLK pin connection to the display
 const int LED_DIO = 05; //The DIO Pin
-TM1637 tm1637(LED_CLK, LED_DIO); //set up the 4-Digit Display.
+SevenSegmentTM1637 display(LED_CLK, LED_DIO); //set up the 4-Digit Display.
 
 //Customize----------------------------------------------------------------------------------------------------------------------------
 const int maxUser = 100; //Maxminum amount of Users
@@ -44,7 +44,6 @@ const char fingerprint[] PROGMEM = "AA 00 BB 11 CC 22 DD 33 EE 44 FF 66 77 88 00
 const int maxWifiRetry = 40; // Maximum number of steps for successful wifi connection (each step 500ms) 
 const int maxFetchRetry = 80; // Maximum number of attempts to contact the API
 const bool fetchIfUnknownCard = false; //Refresh List of Allowed UID if Unknown Card was read. (Slow)
-
 //End Customize------------------------------------------------------------------------------------------------------------------------
 
 
@@ -70,6 +69,10 @@ void setup() {
   SPI.begin(); // Init SPI bus
   rfid.PCD_Init(); // Init MFRC522
 
+  //Setting up display
+  display.begin();            // initializes the display
+  display.setBacklight(100);  // set the brightness to 100 %
+  display.print(1000);
 //Print license
 Serial.println("--------------------------------------------------------------------------------------------------");
   Serial.println("Schluesselkasten for the Computer-Science Student Union of the Univertity of Tuebingen");
@@ -86,11 +89,7 @@ Serial.println("----------------------------------------------------------------
   Serial.println("See https://github.com/not-a-feature/Schluesselkasten/blob/master/LICENSE for more. details.");
 Serial.println("--------------------------------------------------------------------------------------------------");
 
-  
-  //LED-Display
-  tm1637.init();
-  tm1637.setBrightness(8);
-  tm1637.dispNumber(1000);
+ 
 
   //Motor Pins
   pinMode(MOTOR_PIN1, OUTPUT);
@@ -109,14 +108,13 @@ Serial.println("----------------------------------------------------------------
   disableWifi();
   printallowedUID();
   doorStatus();
-  tm1637.dispNumber(2000);
+  display.print(2000);
 }
 
 void loop() {
   //If ready
   if (state == 3 && closed == true) {
     // Look for new cards
-    tm1637.dispNumber(2001);
     if ( ! rfid.PICC_IsNewCardPresent())
       return;
 
@@ -129,37 +127,45 @@ void loop() {
       nuidPICC[i] = rfid.uid.uidByte[i];
     }
     //Convert UID to Hex
-    tm1637.dispNumber(2001);
     currentUID = convertHex(rfid.uid.uidByte, rfid.uid.size);
     Serial.print(currentUID);
 
     rfid.PICC_HaltA();
     rfid.PCD_StopCrypto1();
     if (currentUID == debugUID_right) {
+      display.print("D-R");
       for (int i = 0; i < debugSteps; i++) {
         step_right();
       }
       reset_pins();
+      display.clear();
+      display.print("OK");
     }
     else if (currentUID == debugUID_left) {
+      display.print("D-L");
       for (int i = 0; i < debugSteps; i++) {
         step_left();
       }
       reset_pins();
+      display.clear();
+      display.print("OK");
     }
     else if (checkUser()) {
-      tm1637.dispNumber(3001);
+      display.print(3001);
       Serial.print(" is allowed");
       Serial.println("");
       openDoor(maxSteps);
-      delay(2000);
+      display.print("OPEN");
+      delay(5000);
       doorStatus();
       if (closed) {
         closeDoor();
+      display.clear();
+      display.print("OK");
       }
     }
     else {
-      tm1637.dispNumber(3002);
+      display.print(3002);
       Serial.print(" is not allowed");
       Serial.println("");
       if (fetchIfUnknownCard) {
@@ -167,15 +173,18 @@ void loop() {
         state = 5;
         die(true);
       }
+      delay(750);
     }
   }
   else if (state == 3 && closed == false) {
-    tm1637.dispNumber(2003);
+    display.print(2003);
     while (!closed) {
       doorStatus();
       delay(400);
     }
     closeDoor();
+      display.clear();
+      display.print("OK");
   }
   
   else {
@@ -190,7 +199,7 @@ void loop() {
 void die(bool quick) {
       Serial.print("Dying State: ");
       Serial.println(state);
-      tm1637.dispNumber(4000 + state);
+      display.print(4000 + state);
       reset_pins();
       disableWifi();
       
@@ -198,7 +207,8 @@ void die(bool quick) {
         delay(5000);
       }
       
-      tm1637.offMode();
+      display.clear();
+      display.off();
       ESP.restart();
 }
 //check if UID in allowedUID array

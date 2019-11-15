@@ -1,7 +1,7 @@
 //Get File from Server
 void fetchTeri() {
   state = 2;
-  tm1637.dispNumber(1200);
+  display.print(1200);
   if (WiFi.status() == WL_CONNECTED) { //Check WiFi connection status
     Serial.print("HTTPS Connecting");
     int r = 0; //retry counter
@@ -16,7 +16,7 @@ void fetchTeri() {
       Serial.print(".");
       r++;
       dispNum++;
-      tm1637.dispNumber(dispNum);
+      display.print(dispNum);
     }
     if (r == maxFetchRetry) {
       Serial.println("Connection failed");
@@ -42,14 +42,14 @@ void fetchTeri() {
       String line = httpsClient.readStringUntil('\n');
       if (line == "\r") {
         Serial.println("headers received");
-        tm1637.dispNumber(1250);
+        display.print(1250);
         break;
       }
     }
     String tmp;
     int counter = 0;
     int totalUser = -1;
-    tm1637.dispNumber(1260);
+    display.print(1260);
     while (httpsClient.available()) {
       //Read Line by Line
       tmp = httpsClient.readStringUntil('\n'); 

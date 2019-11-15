@@ -3,7 +3,7 @@
 void connectWifi() {
   state = 1;
   dispNum = 1100;
-  tm1637.dispNumber(dispNum);
+  display.print(dispNum);
   WiFi.mode(WIFI_OFF);        //Prevents reconnection issue (taking too long to connect)
   delay(1000);
   WiFi.mode(WIFI_STA);        //This line hides the viewing of ESP as wifi hotspot
@@ -19,7 +19,7 @@ void connectWifi() {
     Serial.print(".");
     r++;
     dispNum++;
-    tm1637.dispNumber(dispNum);
+    display.print(dispNum);
   }
   if (r == maxWifiRetry) {
     die(false);

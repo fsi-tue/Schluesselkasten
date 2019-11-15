@@ -17,7 +17,7 @@ void doorStatus() {
 
 void closeDoor() {
   Serial.println( "Closing Door");
-  tm1637.dispNumber(3004);
+  display.print(3004);
   int fallbackSteps = 0;
   for (int i = 0; i < maxSteps; i++) {
     step_right();
@@ -38,7 +38,7 @@ void closeDoor() {
 
 void openDoor(int fallbackSteps) {
   Serial.println( "Opening Door");
-  tm1637.dispNumber(3003);
+  display.print(3003);
   for (int i = 0; i < maxSteps && i < fallbackSteps; i++) {
     step_left();
   }
