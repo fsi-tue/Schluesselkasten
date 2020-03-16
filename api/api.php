@@ -16,7 +16,7 @@ if ($_POST['apikey'] ===  $apikey) {
                         	echo "Created " .  $user;
 			}
 			else {
-				echo "Error: Could not update file";
+				echo "Error: Could not update file.";
 			}
                 }
                 else {
@@ -42,7 +42,7 @@ if ($_POST['apikey'] ===  $apikey) {
                                 echo "Deleted " .  $user;
                         }
                         else {
-                                echo "Error: Could not update file";
+                                echo "Error: Could not update file.";
                         }
                 }
                 else {
@@ -74,7 +74,7 @@ if ($_POST['apikey'] ===  $apikey) {
         }
 }
 else {
-        echo "Error: Wrong API Key";
+        echo "Error: Wrong API Key.";
 }
 
 /*
