@@ -20,7 +20,7 @@ UIDofCard2
 UIDofCardN
 ```
 ### Possible Errors
-- ```Error: Wrong API Key``` The submitted API-Key does not match the saved one.
+- ```Error: Wrong API Key.``` The submitted API-Key does not match the saved one.
 
 ## Get ID-List with names:
 ```POST``` to api.php with:
@@ -40,7 +40,7 @@ UIDofCardN;NameN
 
 ```
 ### Possible Errors
-- ```Error: Wrong API Key``` The submitted API-Key does not match the saved one.
+- ```Error: Wrong API Key.``` The submitted API-Key does not match the saved one.
 
 
 ## Create User:
@@ -54,8 +54,9 @@ usr=UIDofCard;Name
 Will return: ```Created UIDofCard;Name```
 
 ### Possible Errors
-- ```Error: Wrong API Key``` The submitted API-Key does not match the saved one.
+- ```Error: Wrong API Key.``` The submitted API-Key does not match the saved one.
 - ```Error: Wrong USR pattern.``` The submitted usr field does not match the UIDofCard;Name pattern.
+- ```Error: Could not update file.``` An error occurred while writing the file. Check path and permissions.
 - ```Error: User is already in file.``` The submitted UID is already in the user.csv.
 
 ## Delete User:
@@ -68,8 +69,9 @@ usr=UIDofCard;Name
 Will return: ```Deleted UIDofCard;Name```
 
 ### Possible Errors
-- ```Error: Wrong API Key``` The submitted API-Key does not match the saved one.
+- ```Error: Wrong API Key.``` The submitted API-Key does not match the saved one.
 - ```Error: Wrong USR pattern.``` The submitted usr field does not match the UIDofCard;Name pattern.
+- ```Error: Could not update file.``` An error occurred while writing the file. Check path and permissions.
 - ```Error: User not found.``` The submitted User does not exist in the user.csv.. Beware! UID and name must match exactly the one in the file.
 
 
