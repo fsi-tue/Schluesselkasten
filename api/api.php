@@ -11,8 +11,13 @@ if ($_POST['apikey'] ===  $apikey) {
                                 die("Error: User is already in file.");
                         }
                         //Write new entry at bottom of the file
-                        file_put_contents($filename, $user . "\n", FILE_APPEND);
-                        echo "Created " .  $user;
+                        $file = file_put_contents($filename, $user . "\n", FILE_APPEND);
+			if($file) {
+                        	echo "Created " .  $user;
+			}
+			else {
+				echo "Error: Could not update file";
+			}
                 }
                 else {
                         echo "Error: Wrong USR pattern.";
@@ -25,15 +30,20 @@ if ($_POST['apikey'] ===  $apikey) {
                         //Read file
                         $file = file($filename);
                         $pos = array_search($user, $file);
-                        
+
                         if ($pos === false) {
                                 die("Error: User not found.");
                         }
                         unset($file[$pos]);
                         $file = implode($file);
                         //Write new file
-                        file_put_contents($filename, $file);
-                        echo "Deleted " .  $user;
+                        $file = file_put_contents($filename, $file);
+                        if($file) {
+                                echo "Deleted " .  $user;
+                        }
+                        else {
+                                echo "Error: Could not update file";
+                        }
                 }
                 else {
                         echo "Error: Wrong USR pattern.";
@@ -77,3 +87,4 @@ bb420975;ErikaMuster
 89e370ae;JaneDoe
 */
 ?>
+
